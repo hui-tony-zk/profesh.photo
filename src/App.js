@@ -29,7 +29,7 @@ function App() {
                 <h5>Take a Selfie!</h5>
             }
             {!selectedImage ?
-              <TakePhoto stateChanger={setSelectedImage} /> : (
+              <TakePhoto selectedImage={selectedImage} setSelectedImage={setSelectedImage} /> : (
                 <>
                   <RemoveBGButton selectedImage={selectedImage} setSelectedImage={setSelectedImage} />
                   <ResetButton resetState={setSelectedImage} />

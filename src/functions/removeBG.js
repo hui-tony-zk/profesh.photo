@@ -1,8 +1,8 @@
 import '@tensorflow/tfjs-core';
 import '@tensorflow/tfjs-backend-webgl';
-import '@tensorflow/tfjs-converter'
+// import '@tensorflow/tfjs-converter'
 import * as bodySegmentation from '@tensorflow-models/body-segmentation';
-import '@mediapipe/selfie_segmentation';
+// import '@mediapipe/selfie_segmentation';
 
 // docs here: https://github.com/tensorflow/tfjs-models/tree/master/body-segmentation/src/body_pix
 

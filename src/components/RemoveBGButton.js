@@ -6,6 +6,7 @@ import removeBG from '../functions/removeBG';
 export default function ({ selectedImage, setSelectedImage }) {
     const processImage = async () => {
         const image = await removeBG(selectedImage)
+        setSelectedImage(image)
     }
 
     return (

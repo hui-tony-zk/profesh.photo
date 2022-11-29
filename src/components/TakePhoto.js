@@ -1,54 +1,73 @@
-import React from "react";
-import { IconButton } from '@mui/material';
-import CameraAltIcon from '@mui/icons-material/CameraAlt';
+/* Create a functional React component that allows users to upload a photo and crop to a 1:1 aspect ratio */
+import React, { useState, useCallback } from 'react';
+import Cropper from 'react-easy-crop'
+import getCroppedImg from '../functions/getCroppedImage';
 
-const useStyles = {
-  root: {
-    height: "100%",
-    textAlign: "center"
-  },
-  imgBox: {
-    maxWidth: "80%",
-    maxHeight: "80%",
-    margin: "10px"
-  },
-  img: {
-    height: "inherit",
-    maxWidth: "inherit"
-  },
-  input: {
-    display: "none"
-  }
-};
+const UploadAndProcessImage = (props) => {
+  const [imageSrc, setImageSrc] = useState(null)
+  const [crop, setCrop] = useState({ x: 0, y: 0 })
+  const [zoom, setZoom] = useState(1)
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState(null)
+  const [croppedImage, setCroppedImage] = useState(null)
 
-export default function ({stateChanger}) {
-  const handleCapture = (target) => {
-    if (target.files) {
-      if (target.files.length !== 0) {
-        const file = target.files[0];
-        const newUrl = URL.createObjectURL(file);
-        stateChanger(newUrl)
-      }
+  const onCropComplete = useCallback((croppedArea, croppedAreaPixels) => {
+    setCroppedAreaPixels(croppedAreaPixels)
+  }, [])
+
+  const showCroppedImage = useCallback(async () => {
+    try {
+      const squareImg = await getCroppedImg(
+        imageSrc,
+        croppedAreaPixels
+      )
+      setCroppedImage(squareImg)
+    } catch (e) {
+      console.error(e)
     }
-  };
+  }, [croppedAreaPixels])
+
+  const onSelectFile = e => {
+    if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0];
+      const newUrl = URL.createObjectURL(file);
+      setImageSrc(newUrl)
+      setCroppedImage(null)
+    }
+  }
+
   return (
     <>
-      <input
-        accept="image/*"
-        id="icon-button-file"
-        type="file"
-        capture="environment"
-        onChange={(e) => handleCapture(e.target)}
-      />
-      <label htmlFor="icon-button-file">
-        <IconButton
-          color="primary"
-          aria-label="upload picture"
-          component="span"
-        >
-          <CameraAltIcon fontSize="large" color="primary" />
-        </IconButton>
-      </label>
+      <input accept="image/*" type="file" onChange={onSelectFile} />
+      {!!imageSrc && (
+        <>
+          <div style={componentStyles.cropContainer}>
+            <Cropper
+              image={imageSrc}
+              crop={crop}
+              zoom={zoom}
+              aspect={1 / 1}
+              onCropChange={setCrop}
+              onCropComplete={onCropComplete}
+              onZoomChange={setZoom}
+            />
+          </div>
+          <button onClick={showCroppedImage}>Result</button>
+          {croppedImage &&
+            <img alt="Crop" src={croppedImage} />
+          }
+        </>
+      )}
     </>
-  );
+  )
+}
+
+export default UploadAndProcessImage;
+
+const componentStyles = {
+  cropContainer: {
+    position: 'relative',
+    width: 200,
+    height: 200,
+    background: '#000'
+  }
 }
