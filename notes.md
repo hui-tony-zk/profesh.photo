@@ -1,1 +1,2 @@
 * How to get faces: https://blog.tensorflow.org/2022/01/body-segmentation.html; https://github.com/tensorflow/tfjs-models/tree/master/body-segmentation
+* Need to use @3 versions of tensorflow libraries (instead of 4) to maintain compatibility with BodyPix

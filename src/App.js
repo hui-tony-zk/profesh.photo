@@ -15,26 +15,18 @@ function App() {
       <Grid item xs={12}>
         <div className="App">
           <header className="App-header">
-            {
-              selectedImage ? (
-                <Box
-                  display="flex"
-                  justifyContent="center"
-                  border={1}
-                >
-                  <img src={selectedImage} alt={"snap"} id={"selectedImage"}/>
-                  <canvas id={"canvas"}/>
-                </Box>
-              ) :
+            {selectedImage ? (
+              <>
+                <img alt="Cropped Image" src={selectedImage} style={componentStyles.croppedImageContainer} />
+                <RemoveBGButton selectedImage={selectedImage} setSelectedImage={setSelectedImage} />
+                <ResetButton resetState={setSelectedImage} />
+              </>
+            ) : (
+              <>
                 <h5>Take a Selfie!</h5>
-            }
-            {!selectedImage ?
-              <TakePhoto selectedImage={selectedImage} setSelectedImage={setSelectedImage} /> : (
-                <>
-                  <RemoveBGButton selectedImage={selectedImage} setSelectedImage={setSelectedImage} />
-                  <ResetButton resetState={setSelectedImage} />
-                </>
-              )
+                <TakePhoto selectedImage={selectedImage} setSelectedImage={setSelectedImage} />
+              </>
+            )
             }
           </header>
         </div>
@@ -44,3 +36,11 @@ function App() {
 }
 
 export default App;
+
+
+const componentStyles = {
+  croppedImageContainer: {
+    width: '100%',
+    maxWidth: '300px'
+  }
+}

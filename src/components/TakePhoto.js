@@ -3,8 +3,8 @@ import React, { useState, useCallback } from 'react';
 import Cropper from 'react-easy-crop'
 import getCroppedImg from '../functions/getCroppedImage';
 
-const UploadAndProcessImage = (props) => {
-  const [imageSrc, setImageSrc] = useState(null)
+const UploadAndProcessImage = ({ selectedImage, setSelectedImage }) => {
+  const [rawImage, setRawImage] = useState(null)
   const [crop, setCrop] = useState({ x: 0, y: 0 })
   const [zoom, setZoom] = useState(1)
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null)
@@ -14,10 +14,10 @@ const UploadAndProcessImage = (props) => {
     setCroppedAreaPixels(croppedAreaPixels)
   }, [])
 
-  const showCroppedImage = useCallback(async () => {
+  const saveCrop = useCallback(async () => {
     try {
       const squareImg = await getCroppedImg(
-        imageSrc,
+        rawImage,
         croppedAreaPixels
       )
       setCroppedImage(squareImg)
@@ -26,11 +26,19 @@ const UploadAndProcessImage = (props) => {
     }
   }, [croppedAreaPixels])
 
+  const resetCrop = () => {
+    setCroppedImage(null)
+  }
+
+  const finishedCropping = () => {
+    setSelectedImage(croppedImage)
+  }
+
   const onSelectFile = e => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
       const newUrl = URL.createObjectURL(file);
-      setImageSrc(newUrl)
+      setRawImage(newUrl)
       setCroppedImage(null)
     }
   }
@@ -38,23 +46,30 @@ const UploadAndProcessImage = (props) => {
   return (
     <>
       <input accept="image/*" type="file" onChange={onSelectFile} />
-      {!!imageSrc && (
+      {rawImage && (
         <>
-          <div style={componentStyles.cropContainer}>
-            <Cropper
-              image={imageSrc}
-              crop={crop}
-              zoom={zoom}
-              aspect={1 / 1}
-              onCropChange={setCrop}
-              onCropComplete={onCropComplete}
-              onZoomChange={setZoom}
-            />
-          </div>
-          <button onClick={showCroppedImage}>Result</button>
-          {croppedImage &&
-            <img alt="Crop" src={croppedImage} />
-          }
+          {croppedImage ? (
+            <>
+              <img alt="Crop" src={croppedImage} style={componentStyles.croppedImageContainer} />
+              <button onClick={resetCrop}>Crop again</button>
+              <button onClick={finishedCropping}>Done cropping</button>
+            </>
+          ) : (
+            <>
+              <div style={componentStyles.cropContainer}>
+                <Cropper
+                  image={rawImage}
+                  crop={crop}
+                  zoom={zoom}
+                  aspect={1 / 1}
+                  onCropChange={setCrop}
+                  onCropComplete={onCropComplete}
+                  onZoomChange={setZoom}
+                />
+              </div>
+              <button onClick={saveCrop}>Save Crop</button>
+            </>
+          )}
         </>
       )}
     </>
@@ -66,8 +81,12 @@ export default UploadAndProcessImage;
 const componentStyles = {
   cropContainer: {
     position: 'relative',
-    width: 200,
-    height: 200,
+    width: 300,
+    height: 300,
     background: '#000'
+  },
+  croppedImageContainer: {
+    width: '100%',
+    maxWidth: '300px'
   }
 }
