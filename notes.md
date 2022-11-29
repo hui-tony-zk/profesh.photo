@@ -1,0 +1,1 @@
+* How to get faces: https://blog.tensorflow.org/2022/01/body-segmentation.html; https://github.com/tensorflow/tfjs-models/tree/master/body-segmentation

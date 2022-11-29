@@ -4,6 +4,7 @@ import './App.css';
 
 import TakePhoto from './components/TakePhoto';
 import ResetButton from './components/ResetButton';
+import RemoveBGButton from './components/RemoveBGButton';
 
 
 function App() {
@@ -21,14 +22,19 @@ function App() {
                   justifyContent="center"
                   border={1}
                 >
-                  <img src={selectedImage} alt={"snap"}></img>
+                  <img src={selectedImage} alt={"snap"} id={"selectedImage"}/>
+                  <canvas id={"canvas"}/>
                 </Box>
               ) :
                 <h5>Take a Selfie!</h5>
             }
             {!selectedImage ?
-              <TakePhoto stateChanger={setSelectedImage} /> :
-              <ResetButton resetState={setSelectedImage} />
+              <TakePhoto stateChanger={setSelectedImage} /> : (
+                <>
+                  <RemoveBGButton selectedImage={selectedImage} setSelectedImage={setSelectedImage} />
+                  <ResetButton resetState={setSelectedImage} />
+                </>
+              )
             }
           </header>
         </div>
