@@ -1,6 +1,7 @@
 /* Create a functional React component that allows users to upload a photo and crop to a 1:1 aspect ratio */
 import React, { useState, useCallback } from 'react';
 import Cropper from 'react-easy-crop'
+import Slider from '@mui/material/Slider'
 import getCroppedImg from '../functions/getCroppedImage';
 
 const UploadAndProcessImage = ({ selectedImage, setSelectedImage }) => {
@@ -67,6 +68,15 @@ const UploadAndProcessImage = ({ selectedImage, setSelectedImage }) => {
                   onZoomChange={setZoom}
                 />
               </div>
+              <Slider
+                size="small"
+                min={1}
+                max={3}
+                step={0.1}
+                aria-label="Zoom"
+                valueLabelDisplay="auto"
+                onChange={(e, zoom) => setZoom(zoom)}
+              />
               <button onClick={saveCrop}>Save Crop</button>
             </>
           )}
@@ -88,5 +98,15 @@ const componentStyles = {
   croppedImageContainer: {
     width: '100%',
     maxWidth: '300px'
+  },
+  zoomControl: {
+    position: 'absolute',
+    bottom: 0,
+    left: '50%',
+    width: '50%',
+    transform: 'translateX(-50%)',
+    height: 80,
+    display: 'flex',
+    alignItems: 'center'
   }
 }

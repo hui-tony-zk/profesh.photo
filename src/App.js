@@ -14,21 +14,22 @@ function App() {
     <Grid container>
       <Grid item xs={12}>
         <div className="App">
-          <header className="App-header">
-            {selectedImage ? (
-              <>
-                <img alt="Cropped Image" src={selectedImage} style={componentStyles.croppedImageContainer} />
-                <RemoveBGButton selectedImage={selectedImage} setSelectedImage={setSelectedImage} />
-                <ResetButton resetState={setSelectedImage} />
-              </>
-            ) : (
-              <>
-                <h5>Take a Selfie!</h5>
-                <TakePhoto selectedImage={selectedImage} setSelectedImage={setSelectedImage} />
-              </>
-            )
-            }
-          </header>
+          <div className="App-body">
+            <div className="App-content">
+              {selectedImage ? (
+                <>
+                  <img alt="Cropped Image" src={selectedImage} style={componentStyles.croppedImageContainer} />
+                  <RemoveBGButton selectedImage={selectedImage} setSelectedImage={setSelectedImage} />
+                  <ResetButton resetState={setSelectedImage} />
+                </>
+              ) : (
+                <>
+                  <h5>Take a Selfie!</h5>
+                  <TakePhoto selectedImage={selectedImage} setSelectedImage={setSelectedImage} />
+                </>
+              )
+              }
+            </div></div>
         </div>
       </Grid>
     </Grid>
