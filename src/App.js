@@ -18,7 +18,7 @@ function App() {
             <div className="App-content">
               {selectedImage ? (
                 <>
-                  <img alt="Cropped Image" src={selectedImage} style={componentStyles.croppedImageContainer} />
+                  <img id="main_img" alt="Cropped Image" src={selectedImage} style={componentStyles.croppedImageContainer} />
                   <RemoveBGButton selectedImage={selectedImage} setSelectedImage={setSelectedImage} />
                   <ResetButton resetState={setSelectedImage} />
                 </>
@@ -29,7 +29,11 @@ function App() {
                 </>
               )
               }
-            </div></div>
+              <div>
+                <canvas id="masked_img" width="300" height="300"/>
+              </div>
+            </div>
+          </div>
         </div>
       </Grid>
     </Grid>

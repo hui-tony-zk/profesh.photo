@@ -1,10 +1,13 @@
+import React from 'react';
 import '@tensorflow/tfjs-core';
 import '@tensorflow/tfjs-backend-webgl';
 // import '@tensorflow/tfjs-converter'
 import * as bodySegmentation from '@tensorflow-models/body-segmentation';
+import { width } from '@mui/system';
 // import '@mediapipe/selfie_segmentation';
 
-// docs here: https://github.com/tensorflow/tfjs-models/tree/master/body-segmentation/src/body_pix
+// docs here: https://github.com/tensorflow/tfjs-models/tree/master/body-segmentation/src/body_pix 
+// or here: https://blog.tensorflow.org/2022/01/body-segmentation.html
 
 const configureSegmenter = async () => {
     const model = bodySegmentation.SupportedModels.BodyPix;
@@ -21,7 +24,7 @@ const configureSegmenter = async () => {
 }
 
 
-export default async function (imgElement) {
+export default async function (imgSrc) {
     const segmentFacesConfig = {
         multiSegmentation: false,
         segmentBodyParts: true,
@@ -31,9 +34,9 @@ export default async function (imgElement) {
 
     const segmenter = await configureSegmenter();
 
-    const img = document.getElementById('selectedImage');
+    const imgCanvas = imgSrcToCanvas(imgSrc);
 
-    const segmentation = await segmenter.segmentPeople(img, segmentFacesConfig);
+    const segmentation = await segmenter.segmentPeople(imgCanvas, segmentFacesConfig);
 
     const faceBodyPartIdsToExtract = [0, 1];
 
@@ -44,14 +47,35 @@ export default async function (imgElement) {
             return [0, 0, 0, 0];
         }
     };
-    
-    const coloredFace = await bodySegmentation.toColoredMask(segmentation, colorFaceOnly);
-    const opacity = 0.99;
-    const canvas = document.getElementById('canvas');
-    bodySegmentation.drawMask(
-        canvas, img, coloredFace, opacity
-    );
+
+    const maskedImageData = await bodySegmentation.toColoredMask(segmentation, colorFaceOnly);
+
+    const maskedCanvas = await drawColoredMask(imgCanvas, maskedImageData);
+
+    return maskedCanvas.toDataURL();
 
 }
 
+const imgSrcToCanvas = (imgSrc) => {
+    const img = new Image(300, 300);
+    img.src = imgSrc;
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext('2d');
+    // Scale the image to fit the canvas dimensions
+    const scaleFactor = Math.min(canvas.width / img.width, canvas.height / img.height);
+    const scaledWidth = img.width * scaleFactor;
+    const scaledHeight = img.height * scaleFactor;
 
+    ctx.drawImage(img, 0, 0, scaledWidth, scaledHeight);
+    return canvas
+};
+
+const drawColoredMask = async (imgCanvas, maskImage) => {
+    const canvas = document.getElementById('masked_img');
+    const maskOpacity = 1;
+    const maskBlurAmount = 2;
+    await bodySegmentation.drawMask(
+        canvas, imgCanvas, maskImage, maskOpacity, maskBlurAmount
+    );
+    return canvas
+};

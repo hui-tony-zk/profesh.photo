@@ -52,8 +52,10 @@ const UploadAndProcessImage = ({ selectedImage, setSelectedImage }) => {
           {croppedImage ? (
             <>
               <img alt="Crop" src={croppedImage} style={componentStyles.croppedImageContainer} />
-              <button onClick={resetCrop}>Crop again</button>
-              <button onClick={finishedCropping}>Done cropping</button>
+              <div>
+                <button onClick={resetCrop}>Crop again</button>
+                <button onClick={finishedCropping}>Done cropping</button>
+              </div>
             </>
           ) : (
             <>
