@@ -60,6 +60,8 @@ const imgSrcToCanvas = (imgSrc) => {
     const img = new Image(300, 300);
     img.src = imgSrc;
     const canvas = document.createElement("canvas");
+    canvas.width = 300;
+    canvas.height= 300;
     const ctx = canvas.getContext('2d');
     // Scale the image to fit the canvas dimensions
     const scaleFactor = Math.min(canvas.width / img.width, canvas.height / img.height);
@@ -71,7 +73,7 @@ const imgSrcToCanvas = (imgSrc) => {
 };
 
 const drawColoredMask = async (imgCanvas, maskImage) => {
-    const canvas = document.getElementById('masked_img');
+    const canvas = document.createElement('canvas');
     const maskOpacity = 1;
     const maskBlurAmount = 2;
     await bodySegmentation.drawMask(

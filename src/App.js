@@ -29,9 +29,6 @@ function App() {
                 </>
               )
               }
-              <div>
-                <canvas id="masked_img" width="300" height="300"/>
-              </div>
             </div>
           </div>
         </div>
